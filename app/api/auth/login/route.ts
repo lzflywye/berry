@@ -24,7 +24,7 @@ export const GET = async () => {
   });
 
   const parameters: Record<string, string> = {
-    redirect_uri: process.env.KEYCLOAK_REDIRECT_URI!,
+    redirect_uri: process.env.KEYCLOAK_CALLBACK_URI!,
     scope: "openid",
     code_challenge,
     code_challenge_method,

@@ -1,5 +1,5 @@
 import { getKeycloakConfig } from "@/lib/keycloack";
-import { saveSession, Tokens } from "@/lib/sessionStore";
+import { saveSession } from "@/lib/sessionStore";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { authorizationCodeGrant } from "openid-client";
@@ -16,7 +16,7 @@ export const GET = async (req: NextRequest) => {
     throw new Error("PKCE verifier not found in session.");
   }
 
-  const tokens: Tokens = await authorizationCodeGrant(config, req, {
+  const tokens = await authorizationCodeGrant(config, req, {
     pkceCodeVerifier: pkceVerifier,
     expectedState: expectedState,
   });

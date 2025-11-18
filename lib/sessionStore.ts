@@ -1,4 +1,8 @@
 import { GlideClient, GlideString, TimeUnit } from "@valkey/valkey-glide";
+import {
+  TokenEndpointResponse,
+  TokenEndpointResponseHelpers,
+} from "openid-client";
 
 const storeClient = await GlideClient.createClient({
   addresses: [
@@ -11,16 +15,9 @@ const storeClient = await GlideClient.createClient({
 const SESSION_PREFIX = "session:";
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7; // 7日間
 
-export interface Tokens {
-  access_token: string;
-  refresh_token?: string;
-  id_token?: string;
-  expires_in?: number;
-}
-
 export const saveSession = async (
   sessionId: string,
-  tokens: Tokens,
+  tokens: TokenEndpointResponse & TokenEndpointResponseHelpers,
 ): Promise<"OK" | GlideString | null> => {
   const key = `${SESSION_PREFIX}${sessionId}`;
 
@@ -29,7 +26,9 @@ export const saveSession = async (
   });
 };
 
-export const getSession = async (sessionId: string): Promise<Tokens | null> => {
+export const getSession = async (
+  sessionId: string,
+): Promise<(TokenEndpointResponse & TokenEndpointResponseHelpers) | null> => {
   const key = `${SESSION_PREFIX}${sessionId}`;
   const data = await storeClient.get(key);
   if (!data) {
@@ -38,7 +37,7 @@ export const getSession = async (sessionId: string): Promise<Tokens | null> => {
 
   await storeClient.expire(key, SESSION_EXPIRATION_SECONDS);
 
-  return JSON.parse(data.toString()) as Tokens;
+  return JSON.parse(data.toString());
 };
 
 export const deleteSession = async (sessionId: string) => {

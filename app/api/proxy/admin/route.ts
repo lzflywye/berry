@@ -26,8 +26,8 @@ export const GET = async () => {
         "Content-Type": contentType,
       },
     });
-  } catch (error) {
-    console.error(error);
+  } catch (err: unknown) {
+    console.error(err);
 
     return NextResponse.json(
       { error: "Internal Server Error" },

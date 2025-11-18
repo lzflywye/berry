@@ -30,7 +30,7 @@ export const GET = async () => {
             token_type_hint: "refresh_token",
           });
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.warn("Failed to revoke tokens", err);
       }
     }

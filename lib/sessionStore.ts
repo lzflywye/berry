@@ -1,5 +1,5 @@
-import { GlideClient, GlideString, TimeUnit } from "@valkey/valkey-glide";
-import {
+import { GlideClient, type GlideString, TimeUnit } from "@valkey/valkey-glide";
+import type {
   TokenEndpointResponse,
   TokenEndpointResponseHelpers,
 } from "openid-client";

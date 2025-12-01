@@ -1,4 +1,4 @@
-import { getKeycloakConfig } from "@/lib/keycloack";
+import { getOIDCConfig } from "@/lib/oidc";
 import { deleteSession, getSession } from "@/lib/sessionStore";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -17,7 +17,7 @@ export const GET = async () => {
 
     if (tokens) {
       try {
-        const config = await getKeycloakConfig();
+        const config = await getOIDCConfig();
 
         if (tokens.access_token) {
           await tokenRevocation(config, tokens.access_token, {
@@ -36,7 +36,7 @@ export const GET = async () => {
     }
 
     if (tokens?.id_token) {
-      const config = await getKeycloakConfig();
+      const config = await getOIDCConfig();
       const endSessionUrl = buildEndSessionUrl(config, {
         id_token_hint: tokens.id_token,
         post_logout_redirect_uri: process.env.POST_LOGOUT_REDIRECT_URI!,

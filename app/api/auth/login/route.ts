@@ -1,4 +1,4 @@
-import { getKeycloakConfig } from "@/lib/keycloack";
+import { getOIDCConfig } from "@/lib/oidc";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import {
@@ -9,7 +9,7 @@ import {
 } from "openid-client";
 
 export const GET = async () => {
-  const config = await getKeycloakConfig();
+  const config = await getOIDCConfig();
   const cookieStore = await cookies();
   const secureCookie = process.env.NODE_ENV === "production";
 
@@ -24,7 +24,7 @@ export const GET = async () => {
   });
 
   const parameters: Record<string, string> = {
-    redirect_uri: process.env.KEYCLOAK_CALLBACK_URI!,
+    redirect_uri: process.env.OIDC_CALLBACK_URI!,
     scope: "openid",
     code_challenge,
     code_challenge_method,

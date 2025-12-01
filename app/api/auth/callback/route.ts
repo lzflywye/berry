@@ -1,4 +1,4 @@
-import { getKeycloakConfig } from "@/lib/keycloack";
+import { getOIDCConfig } from "@/lib/oidc";
 import { saveSession } from "@/lib/sessionStore";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -6,7 +6,7 @@ import { authorizationCodeGrant } from "openid-client";
 import { v4 } from "uuid";
 
 export const GET = async (req: NextRequest) => {
-  const config = await getKeycloakConfig();
+  const config = await getOIDCConfig();
   const cookieStore = await cookies();
 
   const pkceVerifier = cookieStore.get("pkce_verifier")?.value;

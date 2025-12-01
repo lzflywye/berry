@@ -4,24 +4,33 @@ import type {
   TokenEndpointResponseHelpers,
 } from "openid-client";
 
-const storeClient = await GlideClient.createClient({
-  addresses: [
-    { host: process.env.VALKEY_URL!, port: Number(process.env.VALKEY_PORT!) },
-  ],
-  useTLS: false,
-  requestTimeout: 5000,
-});
+const glideClientInstance: GlideClient | null = null;
+
+const getGlideClient = async (): Promise<GlideClient> => {
+  if (glideClientInstance) {
+    return glideClientInstance;
+  }
+
+  return await GlideClient.createClient({
+    addresses: [
+      { host: process.env.VALKEY_URL!, port: Number(process.env.VALKEY_PORT!) },
+    ],
+    useTLS: false,
+    requestTimeout: 5000,
+  });
+};
 
 const SESSION_PREFIX = "session:";
-const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7; // 7日間
+const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7;
 
 export const saveSession = async (
   sessionId: string,
   tokens: TokenEndpointResponse & TokenEndpointResponseHelpers,
 ): Promise<"OK" | GlideString | null> => {
   const key = `${SESSION_PREFIX}${sessionId}`;
+  const glideClient = await getGlideClient();
 
-  return await storeClient.set(key, JSON.stringify(tokens), {
+  return await glideClient.set(key, JSON.stringify(tokens), {
     expiry: { type: TimeUnit.Seconds, count: SESSION_EXPIRATION_SECONDS },
   });
 };
@@ -30,16 +39,20 @@ export const getSession = async (
   sessionId: string,
 ): Promise<(TokenEndpointResponse & TokenEndpointResponseHelpers) | null> => {
   const key = `${SESSION_PREFIX}${sessionId}`;
-  const data = await storeClient.get(key);
+  const glideClient = await getGlideClient();
+
+  const data = await glideClient.get(key);
   if (!data) {
     return null;
   }
 
-  await storeClient.expire(key, SESSION_EXPIRATION_SECONDS);
+  await glideClient.expire(key, SESSION_EXPIRATION_SECONDS);
 
   return JSON.parse(data.toString());
 };
 
 export const deleteSession = async (sessionId: string) => {
-  await storeClient.del([`${SESSION_PREFIX}${sessionId}`]);
+  const glideClient = await getGlideClient();
+
+  await glideClient.del([`${SESSION_PREFIX}${sessionId}`]);
 };

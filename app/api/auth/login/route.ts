@@ -1,4 +1,4 @@
-import { getOIDCConfig } from "@/lib/oidc";
+import { getOidcConfig } from "@/lib/oidc";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import {
@@ -9,7 +9,7 @@ import {
 } from "openid-client";
 
 export const GET = async () => {
-  const config = await getOIDCConfig();
+  const config = await getOidcConfig();
   const cookieStore = await cookies();
   const secureCookie = process.env.NODE_ENV === "production";
 

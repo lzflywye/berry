@@ -5,9 +5,9 @@ import {
   discovery,
 } from "openid-client";
 
-let OIDCConfig: Configuration;
+let OidcConfig: Configuration;
 
-const initializeOIDCConfig = async (): Promise<Configuration> => {
+const initializeOidcConfig = async (): Promise<Configuration> => {
   const config = await discovery(
     new URL(process.env.OIDC_ISSUER!),
     process.env.OIDC_CLIENT_ID!,
@@ -19,10 +19,10 @@ const initializeOIDCConfig = async (): Promise<Configuration> => {
   return config;
 };
 
-export const getOIDCConfig = async (): Promise<Configuration> => {
-  if (!OIDCConfig) {
-    OIDCConfig = await initializeOIDCConfig();
+export const getOidcConfig = async (): Promise<Configuration> => {
+  if (!OidcConfig) {
+    OidcConfig = await initializeOidcConfig();
   }
 
-  return OIDCConfig;
+  return OidcConfig;
 };

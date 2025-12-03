@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { deleteSession, getSession, saveSession } from "./sessionStore";
-import { getOIDCConfig } from "./oidc";
+import { getOidcConfig } from "./oidc";
 import { refreshTokenGrant } from "openid-client";
 import { decodeJwt } from "jose";
 
@@ -60,7 +60,7 @@ export const getValidAccessToken = async (): Promise<string | null> => {
       }
 
       try {
-        const config = await getOIDCConfig();
+        const config = await getOidcConfig();
         const newTokens = await refreshTokenGrant(config, tokens.refresh_token);
 
         await saveSession(sessionId, newTokens);

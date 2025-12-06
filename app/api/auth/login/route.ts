@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import {
   buildAuthorizationUrl,
   calculatePKCECodeChallenge,
+  randomNonce,
   randomPKCECodeVerifier,
   randomState,
 } from "openid-client";
@@ -15,31 +16,29 @@ export const GET = async () => {
 
   const code_verifier = randomPKCECodeVerifier();
   const code_challenge = await calculatePKCECodeChallenge(code_verifier);
-  const code_challenge_method = "S256";
+  const state = randomState();
+  const nonce = randomNonce();
 
-  cookieStore.set("pkce_verifier", code_verifier, {
+  const cookieOptions = {
     httpOnly: true,
     secure: secureCookie,
-    sameSite: "lax",
-  });
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: 60 * 10,
+  };
+
+  cookieStore.set("pkce_verifier", code_verifier, cookieOptions);
+  cookieStore.set("oidc_state", state, cookieOptions);
+  cookieStore.set("oidc_nonce", nonce, cookieOptions);
 
   const parameters: Record<string, string> = {
     redirect_uri: process.env.OIDC_CALLBACK_URI!,
     scope: "openid",
     code_challenge,
-    code_challenge_method,
+    code_challenge_method: "S256",
+    state,
+    nonce,
   };
-
-  let state: string | undefined;
-  if (!config.serverMetadata().supportsPKCE()) {
-    state = randomState();
-    parameters.state = state;
-    cookieStore.set("oidc_state", state, {
-      httpOnly: true,
-      secure: secureCookie,
-      sameSite: "lax",
-    });
-  }
 
   const redirectTo = buildAuthorizationUrl(config, parameters);
 

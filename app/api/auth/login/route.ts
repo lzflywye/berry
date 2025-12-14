@@ -31,9 +31,11 @@ export const GET = async () => {
   cookieStore.set("oidc_state", state, cookieOptions);
   cookieStore.set("oidc_nonce", nonce, cookieOptions);
 
+  const OIDC_SCOPE = process.env.OIDC_SCOPE || "openid offline_access";
+
   const parameters: Record<string, string> = {
     redirect_uri: process.env.OIDC_CALLBACK_URI!,
-    scope: "openid",
+    scope: OIDC_SCOPE,
     code_challenge,
     code_challenge_method: "S256",
     state,

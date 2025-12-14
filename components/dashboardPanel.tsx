@@ -103,7 +103,7 @@ export const DashboardPanel = () => {
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-linear-to-r from-indigo-600 to-purple-600 rounded-lg blur opacity-0 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
               <pre
-                className={`relative bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto font-mono min-h-[150px] border border-gray-800 shadow-inner ${
+                className={`relative bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto font-mono min-h-37.5 border border-gray-800 shadow-inner ${
                   !userInfoResponse
                     ? "flex items-center justify-center text-gray-400 italic"
                     : ""
@@ -139,7 +139,7 @@ export const DashboardPanel = () => {
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-linear-to-r from-gray-600 to-gray-400 rounded-lg blur opacity-0 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
               <pre
-                className={`relative bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto font-mono min-h-[150px] border border-gray-800 shadow-inner ${
+                className={`relative bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto font-mono min-h-37.5 border border-gray-800 shadow-inner ${
                   !adminInfoResponse
                     ? "flex items-center justify-center text-gray-400 italic"
                     : ""

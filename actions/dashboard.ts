@@ -1,23 +1,24 @@
 "use server";
 
-import { client } from "@/lib/api/client";
-import { getValidAccessToken } from "@/lib/auth";
+import { createAuthClient } from "@/lib/api/factory";
+import type { paths } from "@/lib/api/schema";
+
+const API_BASE_URL = process.env.API_BASE_URL!;
 
 type ActionResult<T> =
   | { success: true; data: T }
   | { success: false; error: string };
 
-export async function fetchUserInfoAction(): Promise<
-  ActionResult<{ userName?: string }>
-> {
-  const token = await getValidAccessToken();
-  if (!token) return { success: false, error: "Unauthorized" };
+type UserInfoResponse =
+  paths["/api/users/me"]["get"]["responses"][200]["content"]["application/json"];
 
-  const { data, error } = await client.GET("/api/users/me", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export async function fetchUserInfoAction(): Promise<
+  ActionResult<UserInfoResponse>
+> {
+  const client = await createAuthClient<paths>(API_BASE_URL);
+  if (!client) return { success: false, error: "Unauthorized" };
+
+  const { data, error } = await client.GET("/api/users/me");
 
   if (error) {
     console.error("API Error:", error);
@@ -31,14 +32,16 @@ export async function fetchUserInfoAction(): Promise<
   return { success: true, data };
 }
 
-export async function fetchAdminInfoAction(): Promise<ActionResult<string>> {
-  const token = await getValidAccessToken();
-  if (!token) return { success: false, error: "Unauthorized" };
+type AdminInfoResponse =
+  paths["/api/admin"]["get"]["responses"][200]["content"]["text/plain"];
+
+export async function fetchAdminInfoAction(): Promise<
+  ActionResult<AdminInfoResponse>
+> {
+  const client = await createAuthClient<paths>(API_BASE_URL);
+  if (!client) return { success: false, error: "Unauthorized" };
 
   const { data, error } = await client.GET("/api/admin", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
     parseAs: "text",
   });
 

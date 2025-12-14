@@ -42,7 +42,9 @@ export const GET = async (req: NextRequest) => {
     });
 
     return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
-  } catch {
+  } catch (err) {
+    console.error("Callback Error Details:", err);
+
     return NextResponse.redirect(
       new URL("/login?error=callback_failed", req.nextUrl),
     );

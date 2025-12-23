@@ -6,5 +6,8 @@
   },
   "files.associations": {
     "*.css": "tailwindcss"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "docker.docker"
   }
 }

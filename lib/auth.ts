@@ -2,7 +2,7 @@ import { decodeJwt } from "jose";
 import { cookies } from "next/headers";
 import { refreshTokenGrant } from "openid-client";
 import { getOidcConfig } from "./oidc";
-import { createSession, revokeSession, verifySession } from "./session";
+import { createSession, verifySession } from "./session";
 
 const EXP_BUFFER_SECONDS = 5;
 
@@ -19,8 +19,8 @@ export const getValidAccessToken = async (): Promise<string | null> => {
   }
 
   const invalidateSession = async () => {
-    await revokeSession(sessionId);
-    cookieStore.delete("session_id");
+    // await revokeSession(sessionId);
+    // cookieStore.delete("session_id");
     return null;
   };
 

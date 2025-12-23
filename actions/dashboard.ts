@@ -1,9 +1,9 @@
 "use server";
 
 import { createAuthClient } from "@/lib/api/factory";
-import type { paths } from "@/lib/api/schema";
+import type { paths } from "@/lib/api/cyrene";
 
-const API_BASE_URL = process.env.API_BASE_URL!;
+const CYRENE_API_URL = process.env.CYRENE_API_URL!;
 
 type ActionResult<T> =
   | { success: true; data: T }
@@ -15,7 +15,7 @@ type UserInfoResponse =
 export async function fetchUserInfoAction(): Promise<
   ActionResult<UserInfoResponse>
 > {
-  const client = await createAuthClient<paths>(API_BASE_URL);
+  const client = await createAuthClient<paths>(CYRENE_API_URL);
   if (!client) return { success: false, error: "Unauthorized" };
 
   const { data, error } = await client.GET("/api/users/me");
@@ -23,30 +23,6 @@ export async function fetchUserInfoAction(): Promise<
   if (error) {
     console.error("API Error:", error);
     return { success: false, error: "Failed to fetch user info" };
-  }
-
-  if (!data) {
-    return { success: false, error: "No data received from API" };
-  }
-
-  return { success: true, data };
-}
-
-type AdminInfoResponse =
-  paths["/api/admin"]["get"]["responses"][200]["content"]["text/plain"];
-
-export async function fetchAdminInfoAction(): Promise<
-  ActionResult<AdminInfoResponse>
-> {
-  const client = await createAuthClient<paths>(API_BASE_URL);
-  if (!client) return { success: false, error: "Unauthorized" };
-
-  const { data, error } = await client.GET("/api/admin", {
-    parseAs: "text",
-  });
-
-  if (error) {
-    return { success: false, error: "Failed to fetch admin info" };
   }
 
   if (!data) {

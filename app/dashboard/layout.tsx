@@ -1,10 +1,11 @@
 import { LogOutIcon } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 export default async function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-neutral-200">

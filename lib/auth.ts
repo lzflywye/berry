@@ -19,8 +19,6 @@ export const getValidAccessToken = async (): Promise<string | null> => {
   }
 
   const invalidateSession = async () => {
-    // await revokeSession(sessionId);
-    // cookieStore.delete("session_id");
     return null;
   };
 

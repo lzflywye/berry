@@ -48,3 +48,28 @@ export const getValidAccessToken = async (): Promise<string | null> => {
     return await invalidateSession();
   }
 };
+
+export const authFetch = async (
+  origin: string,
+  path: string = "/",
+  options: RequestInit = {},
+): Promise<[Response, null] | [null, Error]> => {
+  try {
+    const token = await getValidAccessToken();
+    if (!token) {
+      return [null, new Error("No token")];
+    }
+
+    const response = await fetch(`${origin}${path}`, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return [response, null];
+  } catch (e) {
+    return [null, e instanceof Error ? e : new Error(String(e))];
+  }
+};
